@@ -1,6 +1,11 @@
-from extractor.quality import evaluate_quality, is_high_quality
+from extractor.quality import evaluate_quality
 
-sample = "FastAPI is a modern Python framework. " * 50
+bad = "Hello"
 
-print(evaluate_quality(sample))
-print(is_high_quality(sample))
+good = """
+FastAPI is a modern Python framework.
+""" * 100
+
+print(evaluate_quality(good))
+
+print(evaluate_quality(bad))

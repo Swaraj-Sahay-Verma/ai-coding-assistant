@@ -88,14 +88,27 @@ def is_high_quality(text: dir) -> bool:
     
 def evaluate_quality(text: str) -> dict:
     metrics = compute_metrics(text)
+    reasons = []
     
-    passed = (
-        passes_length(metrics)
-        and passes_word_count(metrics)
-        and passes_alphabet_ratio(metrics)
-    )
+    if not passes_length(metrics):
+        reasons.append(
+            "Character count below minimum threshold."
+        )
     
+    if not passes_word_count(metrics):
+        reasons.append(
+            "Word count below minimum threshold."
+        )
+    
+    if not passes_alphabet_ratio(metrics):
+        reasons.append(
+            "Alphabet ratio below minimum threshold."
+        )
+        
+    passed = len(reasons) == 0
+
     return {
         "passed": passed,
         "metrics": metrics,
+        "reasons": reasons,
     }
