@@ -58,24 +58,44 @@ def alphabet_ratio(text: str) -> float:
     return letters / len(text)
 
 
-def passes_length(text: str) -> bool:
-    length = character_count(text)
+
+def compute_metrics(text: str) -> dict:
+    return {
+        "characters": character_count(text),
+        "words": word_count(text),
+        "alphabet_ratio": alphabet_ratio(text),
+    }
+    
+    
+
+def passes_length(metrics: dict) -> bool:
+    length = metrics["characters"]
     
     return MIN_CHARACTERS <= length <= MAX_CHARACTERS
 
 
-def passes_word_count(text: str) -> bool:
-    return word_count(text) >= MIN_WORDS
+def passes_word_count(metrics: dir) -> bool:
+    return metrics["words"] >= MIN_WORDS
 
 
-def passes_alphabet_ratio(text: str) -> bool:
-    return alphabet_ratio(text) >= MIN_ALPHABET_RATIO
+def passes_alphabet_ratio(metrics: dir) -> bool:
+    return metrics["alphabet_ratio"] >= MIN_ALPHABET_RATIO
 
 
 
-def is_high_quality(text: str) -> bool:
-    return (
-        passes_length(text)
-        and passes_word_count(text)
-        and passes_alphabet_ratio(text)
+def is_high_quality(text: dir) -> bool:
+    return evaluate_quality(text)["passed"]
+    
+def evaluate_quality(text: str) -> dict:
+    metrics = compute_metrics(text)
+    
+    passed = (
+        passes_length(metrics)
+        and passes_word_count(metrics)
+        and passes_alphabet_ratio(metrics)
     )
+    
+    return {
+        "passed": passed,
+        "metrics": metrics,
+    }
