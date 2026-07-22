@@ -1,6 +1,7 @@
 from extractor.pipeline import process_html
 from extractor.quality import evaluate_quality
 from dataset.writer import DatasetWriter
+from pipeline.quality_filter import QualityFilter 
 
 
 class DatasetPipeline:
@@ -37,6 +38,7 @@ class DatasetPipeline:
         self,
         accepted_writer: DatasetWriter,
         rejected_writer: DatasetWriter,
+        quality_filter: QualityFilter,
     ):
         """
         Initialize the dataset pipeline with dataset writers.
@@ -44,10 +46,12 @@ class DatasetPipeline:
         Args:
             accepted_writer: Writer used for high-quality documents.
             rejected_writer: Writer used for rejected documents.
+            quality_filter: Applies dataset-level acceptance policies to the processed document.
         """
         
         self.accepted_writer = accepted_writer
         self.rejected_writer = rejected_writer
+        self.quality_filter = quality_filter
 
     def process(
         self,
@@ -80,8 +84,11 @@ class DatasetPipeline:
             "text": text,
             "quality": quality,
         }
+        
+        policy = self.quality_filter.evaluate(document)
+        document["policy"] = policy
 
-        if quality["passed"]:
+        if document["policy"]["accepted"]:
             self.accepted_writer.write(document)
         else:
             self.rejected_writer.write(document)

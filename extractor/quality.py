@@ -74,16 +74,16 @@ def passes_length(metrics: dict) -> bool:
     return MIN_CHARACTERS <= length <= MAX_CHARACTERS
 
 
-def passes_word_count(metrics: dir) -> bool:
+def passes_word_count(metrics: dict) -> bool:
     return metrics["words"] >= MIN_WORDS
 
 
-def passes_alphabet_ratio(metrics: dir) -> bool:
+def passes_alphabet_ratio(metrics: dict) -> bool:
     return metrics["alphabet_ratio"] >= MIN_ALPHABET_RATIO
 
 
 
-def is_high_quality(text: dir) -> bool:
+def is_high_quality(text: str) -> bool:
     return evaluate_quality(text)["passed"]
     
 def evaluate_quality(text: str) -> dict:
